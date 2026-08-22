@@ -36,7 +36,7 @@ This repository is the **Embedded, Real-Time, and Hardware-in-the-Loop Systems**
 ## Governed agentic delivery
 
 - Product: `embedded-rt-hil-learning`; delivery profile: `product-data`.
-- Control revision: `2206fb22691b3af0d9d6a39e582e0e9516a24c50`; harness version: `2`.
+- Control revision: `6c547df370a3cf6c0a24796dd2661e279b6acf0a`; harness version: `2`.
 - Read `contracts/profile-requirements.yaml` and the approved
   `contracts/active-batch.yaml` before implementation.
 - Stay inside active-batch allowed paths and preserve every forbidden path.
