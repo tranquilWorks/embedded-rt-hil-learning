@@ -45,12 +45,12 @@
       "phase_title": "Microcontroller execution",
       "slug": "drive-gpio-with-a-state-machine",
       "folder": "modules/02-drive-gpio-with-a-state-machine",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P02",
       "prerequisites": [
         "P01"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 3,

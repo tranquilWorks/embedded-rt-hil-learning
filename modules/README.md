@@ -7,7 +7,7 @@ reviewable implementation batch. `implemented` means the complete learner slice 
 | Batch | Phase | Module | Guiding question | Status |
 | --- | --- | --- | --- | --- |
 | P01 | 1: Microcontroller execution | [See a Periodic Scheduler Miss a Deadline](../modules/01-see-a-periodic-scheduler-miss-a-deadline/README.md) | When does logically correct software become physically late? | implemented |
-| P02 | 1: Microcontroller execution | [Drive GPIO with a State Machine](../modules/02-drive-gpio-with-a-state-machine/README.md) | What inputs, observable effects, and failure modes matter when you drive GPIO with a State Machine? | scaffolded |
+| P02 | 1: Microcontroller execution | [Drive GPIO with a State Machine](../modules/02-drive-gpio-with-a-state-machine/README.md) | What inputs, observable effects, and failure modes matter when you drive GPIO with a State Machine? | implemented |
 | P03 | 1: Microcontroller execution | [Compare Polling and Interrupts](../modules/03-compare-polling-and-interrupts/README.md) | What inputs, observable effects, and failure modes matter when you compare Polling and Interrupts? | scaffolded |
 | P04 | 1: Microcontroller execution | [Measure Timer Quantization](../modules/04-measure-timer-quantization/README.md) | What inputs, observable effects, and failure modes matter when you measure Timer Quantization? | scaffolded |
 | P05 | 2: Buses and acquisition | [Frame Bytes over UART](../modules/05-frame-bytes-over-uart/README.md) | What inputs, observable effects, and failure modes matter when you frame Bytes over UART? | scaffolded |

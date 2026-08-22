@@ -20,6 +20,7 @@ From a shell:
 ```bash
 ./bin/learn start
 ./bin/learn start P01
+./bin/learn start P02
 ./bin/learn list
 ./bin/learn status
 ```
@@ -33,11 +34,12 @@ python .\bin\learn.py start
 In MATLAB:
 
 ```matlab
-launch_lesson("P01")
-run_module_checks("P01")
+launch_lesson("P02")
+run_module_checks("P02")
 ```
 
-`P01` is a complete reference implementation. The remaining modules are intentionally scaffolded so each can be implemented in a bounded, reviewable batch.
+`P01` is the reference implementation. Every module marked `implemented` is a complete learning
+slice; modules still marked `scaffolded` advance through their own bounded, reviewable batches.
 
 ## Module layout
 
@@ -45,6 +47,7 @@ run_module_checks("P01")
 modules/01-example/
 ├── README.md
 ├── lesson.m
+├── p##_scenario.m (when the module owns reusable deterministic input fixtures)
 ├── model.m
 ├── experiment.m
 ├── interactive.m
