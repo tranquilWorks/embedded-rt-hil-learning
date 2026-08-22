@@ -1,0 +1,90 @@
+schema_version: 1
+batch:
+  id: P02
+  title: 'Implement P02: Drive GPIO with a State Machine'
+  goal: Implement P02 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
+    failure modes matter when you drive GPIO with a State Machine?' through visible cause and effect.
+sources:
+  product: products/embedded-rt-hil-learning/product.yaml
+  requirements:
+  - products/embedded-rt-hil-learning/PRD.md#cap-module-01--complete-learning-slice
+  - products/embedded-rt-hil-learning/acceptance.yaml#CAP-MODULE-01
+  - modules/02-drive-gpio-with-a-state-machine/README.md
+  milestone: products/embedded-rt-hil-learning/milestones/ERH-M1.md
+  baseline_commit: 0ab836efcace36158687a467f64225bd5cff8177
+  control_plane_repository: kpbianco/portfolio-control
+  control_plane_path: products/embedded-rt-hil-learning/batches/P02.yaml
+  control_plane_revision: 6c547df370a3cf6c0a24796dd2661e279b6acf0a  # pragma: allowlist secret
+dependencies: []
+scope:
+  allowed_paths:
+  - modules/02-drive-gpio-with-a-state-machine/**
+  - curriculum/modules.json
+  - README.md
+  - START_HERE.md
+  - modules/README.md
+  - bin/learn
+  - bin/learn.py
+  - docs/plans/P02-*.md
+  - docs/evidence/P02-*.md
+  - tests/test_p02*.py
+  - tests/test_curriculum.py
+  - tests/test_learn_cli.py
+  forbidden_paths:
+  - .github/**
+  - .codex/**
+  - .agents/**
+  - AGENTS.md
+  - contracts/**
+  - curriculum/phases.json
+  - docs/ARCHITECTURE.md
+  - docs/IMPLEMENTATION_CONTRACT.md
+  - docs/TUTOR_PROTOCOL.md
+  - Makefile
+acceptance:
+- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you drive
+  GPIO with a State Machine?'
+- The learner flow visibly follows read, baseline, one lever, changed view, and mechanism-first explanation.
+- experiment.m has a deterministic baseline, labeled plots and metrics, two independent sweeps, and one
+  deliberately broken case.
+- model.m separates deterministic calculations from presentation and interactive.m exposes meaningful
+  controls.
+- lesson and walkthrough connect the module to its prerequisites without syntax-first teaching.
+- checks include independent numerical invariants, limiting cases, interpretation questions, and teach-back.
+- Manifest status becomes implemented only after focused and repository-wide verification passes.
+- Evidence distinguishes static validation from MATLAB runtime, UI, numerical, bench, HIL, and field validation.
+validation:
+  local:
+  - MATLAB_LEARNING_VERIFY_PROFILE=contract python3 scripts/verify.py
+  - MATLAB_LEARNING_VERIFY_PROFILE=quick python3 -m unittest discover -s tests -v
+  - MATLAB_LEARNING_VERIFY_PROFILE=full ./scripts/agent-verify.sh
+  focused_tests_to_add:
+  - P02 artifact completeness and manifest identity
+  - P02 deterministic model and limiting-case checks
+  - P02 two-sweep and broken-case regression
+  - P02 placeholder and opaque-black-box regression
+  required_ci:
+  - Portfolio Control validation
+  - target Quality workflow
+risk:
+  class: moderate
+  hazards:
+  - wrong units or physical interpretation
+  - MATLAB mechanics displace the concept
+  - opaque toolbox use
+  - unrelated module changes
+  - unsupported runtime or physical claims
+  stop_conditions:
+  - required data or toolbox has no approved transparent fallback
+  - changes exceed allowed paths
+  - expected result conflicts with the governing model
+rollback:
+  strategy: Revert P02 implementation changes and restore only its manifest status to scaffolded.
+evidence:
+  output:
+  - docs/evidence/P02-<date>.md
+  - validation commands and exit results
+  - figure, control, metric, and unit inventory
+  - acceptance map, runtime inventory, and limitations
+  claim_boundary: Module structure, deterministic contracts, and retained outputs only; no MATLAB-runtime,
+    UI, numerical-fidelity, bench, HIL, field, or production validation is implied unless separately retained.
