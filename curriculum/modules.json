@@ -125,12 +125,12 @@
       "phase_title": "Buses and acquisition",
       "slug": "sample-an-adc-without-aliasing",
       "folder": "modules/07-sample-an-adc-without-aliasing",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P07",
       "prerequisites": [
         "P06"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 8,
