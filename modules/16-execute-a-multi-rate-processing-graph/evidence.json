@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "batch_id": "P16",
+  "status": "pass",
+  "commands": [
+    {
+      "command": "git status --short --branch; git branch --show-current; git log -8 --oneline --decorate; git worktree list --porcelain",
+      "exit_code": 0,
+      "result": "agent/p16 was at the P15 baseline; only the operator-provided active-batch transition was dirty before implementation."
+    },
+    {
+      "command": "command -v matlab || true; command -v octave || true; command -v matlab-batch || true",
+      "exit_code": 0,
+      "result": "No MATLAB, Octave, or matlab-batch executable was found; absence was handled without a runtime claim."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p16_module.P16ModelContractTests -v",
+      "exit_code": 0,
+      "result": "9 independent reference, model-contract, malformed-input, compatibility, and resource tests passed."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p16_module.P16LearningAndRegressionTests.test_experiment_has_baseline_two_isolated_sweeps_broken_and_recovery tests.test_p16_module.P16LearningAndRegressionTests.test_public_lesson_launches_one_interactive_session tests.test_p16_module.P16LearningAndRegressionTests.test_interactive_exposes_controls_scenarios_two_views_and_bound_callbacks tests.test_p16_module.P16LearningAndRegressionTests.test_fixed_diagnostics_reset_every_control_before_rendering tests.test_p16_module.P16LearningAndRegressionTests.test_executable_checks_cover_failure_recovery_isolation_and_compatibility tests.test_p16_module.P16LearningAndRegressionTests.test_tutor_text_is_mechanism_first_one_prediction_and_teach_back tests.test_p16_module.P16LearningAndRegressionTests.test_claim_language_separates_simulated_runtime_concurrency_and_physical_evidence tests.test_p16_module.P16LearningAndRegressionTests.test_cli_check_resolves_p16_public_matlab_entry_point -v",
+      "exit_code": 0,
+      "result": "8 source, experiment, UI, callback, tutor, evidence-boundary, and CLI-check tests passed before the manifest transition."
+    },
+    {
+      "command": "git diff --check; python3 -m py_compile tests/test_p16_module.py",
+      "exit_code": 0,
+      "result": "Patch whitespace and Python syntax checks passed."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p16_module -v",
+      "exit_code": 0,
+      "result": "Disposable intended-final-state copy passed 25 P16 tests with one conditional MATLAB skip."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "Disposable intended-final-state copy reported VERIFY PASS: 24 modules."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "Disposable intended-final-state copy passed 321 repository tests with 11 conditional MATLAB skips."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "Disposable intended-final-state full gate reported VERIFY PASS: 24 modules and passed 321 tests with 11 MATLAB skips."
+    },
+    {
+      "command": "./bin/learn status; ./bin/learn check P16; git diff --check",
+      "exit_code": 0,
+      "result": "Post-transition CLI reported 16 implemented modules, routed P16 checks, and found no whitespace errors."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p16_module.P16IdentityAndArtifactTests.test_permanent_manifest_identity_prerequisite_status_and_evidence tests.test_p16_module.P16IdentityAndArtifactTests.test_guiding_question_p15_connection_p17_boundary_and_claims_are_explicit tests.test_p16_module.P16IdentityAndArtifactTests.test_no_scaffold_placeholder_or_opaque_residue tests.test_p16_module.P16ModelContractTests tests.test_p16_module.P16LearningAndRegressionTests -v",
+      "exit_code": 0,
+      "result": "Post-transition source/CLI gate passed 22 tests with one conditional MATLAB skip."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "Post-transition contract gate reported VERIFY PASS: 24 modules."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p16_module -v",
+      "exit_code": 0,
+      "result": "Repaired-tree focused gate ran 26 tests: 25 passed and one conditional MATLAB test skipped."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "Repaired-tree repository quick gate ran 322 tests successfully with 11 conditional MATLAB skips."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "Repaired-tree full gate reported VERIFY PASS: 24 modules and ran 322 tests successfully with 11 conditional MATLAB skips; log verify-20260823-144336.log."
+    },
+    {
+      "command": "git diff --check; PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p16_module -v; MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "Independent system-risk repair gate found no whitespace errors, ran 27 P16 tests with 26 passes and one MATLAB-unavailable skip, and reported VERIFY PASS: 24 modules."
+    },
+    {
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v; MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "Independent system-risk repaired tree passed both repository-wide gates: each ran 323 tests with 312 passes and 11 MATLAB-unavailable skips; full verification also reported VERIFY PASS: 24 modules and retained verify-20260823-150239.log."
+    }
+  ],
+  "acceptance": [
+    {
+      "item": "Preserve the guiding question",
+      "status": "pass",
+      "evidence": "Canonical P16 identity and exact question remain unchanged."
+    },
+    {
+      "item": "Visible read, baseline, lever, changed view, and mechanism-first flow",
+      "status": "pass",
+      "evidence": "Lesson, script, walkthrough, and regressions preserve the ordered learner flow with one prediction."
+    },
+    {
+      "item": "Deterministic baseline, labeled plots and metrics, two sweeps, and broken case",
+      "status": "pass",
+      "evidence": "Independent Python references retain exact baseline, decimation, cost, baseline and fast-overloaded consumer-first visibility, underflow admission, timeout, and cancellation results."
+    },
+    {
+      "item": "Pure model and meaningful interactive controls",
+      "status": "pass",
+      "evidence": "model.m has no presentation or wait state; interactive.m binds graph controls and two complementary views."
+    },
+    {
+      "item": "Prerequisite-connected concept-first lesson and walkthrough",
+      "status": "pass",
+      "evidence": "P15 aligned timestamps form the entrance boundary and P17 watchdog behavior remains the forward boundary."
+    },
+    {
+      "item": "Independent invariants, limits, interpretation, and teach-back",
+      "status": "pass",
+      "evidence": "Python references and run_checks.m cover positive, negative, malformed, timeout, cancellation, rollback, recovery, isolation, compatibility, and resource bounds."
+    },
+    {
+      "item": "Manifest advances only after focused and repository-wide verification",
+      "status": "pass",
+      "evidence": "The real manifest stayed scaffolded while a disposable intended-final-state copy passed focused, contract, quick, and full gates."
+    },
+    {
+      "item": "Evidence distinguishes static and simulated references from runtime and physical validation",
+      "status": "pass",
+      "evidence": "All artifacts name unavailable MATLAB/UI and unperformed concurrency, hardware, HIL, field, deployment, and production validation."
+    }
+  ],
+  "changed_invariants": [
+    "P16 now owns the complete implemented artifact set and deterministic p16_scenario fixture.",
+    "P16 lifecycle status is implemented with simulated evidence after an intended-final-state gate.",
+    "The implemented curriculum prefix now permanently includes P16 without constraining later module status.",
+    "The two-rate graph explicitly orders producer visibility, worker service, strict timeout equality, cancellation, and stateless recovery.",
+    "Inclusive outstanding depth is distinguished from waiting-only queue length, and consumer-first visibility follows completed fast work instead of a fixed lag.",
+    "A data-invalid underflow is rejected before slow-worker admission and cannot consume service, enter timeout handling, or delay later valid frames."
+  ],
+  "residual_risks": [
+    "MATLAB source and UI were not executed because no MATLAB runtime is installed.",
+    "The deterministic two-worker arithmetic is educational and does not establish real scheduler, processor, or numerical-fidelity behavior.",
+    "Remote Portfolio Control validation and target Quality workflow have not run for this unpushed branch."
+  ],
+  "unperformed_validation": [
+    "MATLAB runtime execution, run_checks.m execution, rendered UI inspection, and learner teach-back",
+    "real concurrent tasks, interrupts, DMA, processor timing, watchdog, and physical plant behavior",
+    "bench, HIL, field, RT1/RT2, Unreal, signing, release, deployment, staging, and production validation",
+    "remote Portfolio Control validation and target Quality workflow"
+  ]
+}
