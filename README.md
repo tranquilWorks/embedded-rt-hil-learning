@@ -32,6 +32,7 @@ From a shell:
 ./bin/learn start P11
 ./bin/learn start P12
 ./bin/learn start P13
+./bin/learn start P14
 ./bin/learn list
 ./bin/learn status
 ```
@@ -45,11 +46,11 @@ python .\bin\learn.py start
 In MATLAB:
 
 ```matlab
-launch_lesson("P13")
-run_module_checks("P13")
+launch_lesson("P14")
+run_module_checks("P14")
 ```
 
-`P01` is the reference implementation, and P02–P13 are complete compounding learning slices. Every
+`P01` is the reference implementation, and P02–P14 are complete compounding learning slices. Every
 module marked `implemented` is runnable; remaining modules advance through their own bounded,
 reviewable batches. The live manifest remains the source of truth as that frontier moves.
 
