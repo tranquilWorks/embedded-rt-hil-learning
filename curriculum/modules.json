@@ -77,12 +77,12 @@
       "phase_title": "Microcontroller execution",
       "slug": "measure-timer-quantization",
       "folder": "modules/04-measure-timer-quantization",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P04",
       "prerequisites": [
         "P03"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 5,
