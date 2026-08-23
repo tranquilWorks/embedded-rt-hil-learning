@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "batch_id": "P14",
+  "status": "pass",
+  "commands": [
+    {"phase": "preflight", "command": "git branch --show-current && git rev-parse HEAD && git status --short && git log -5 --oneline --decorate && git worktree list --porcelain", "exit_code": 0, "result": "agent/p14 at 7a28c6a; two control-plane activation files dirty before implementation"},
+    {"phase": "preflight", "command": "sha256sum contracts/active-batch.yaml contracts/repo-profile.yaml .learning/progress.json", "exit_code": 0, "result": "48006fb306d0d3982fa769559505a78a9ea3d02bcbb76879ac85da07aa6eeb9e; 1fa113dbc12457953b82e4e3fc002841cd5a842918e93749377453b6c76ae091; 168524eb663a65c50831d7acb42f633e8c2d900595b887a5e9eca923485fe2ab"},
+    {"phase": "pre-change", "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py", "exit_code": 0, "result": "VERIFY PASS: 24 modules"},
+    {"phase": "pre-change", "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v", "exit_code": 0, "result": "246 tests ran successfully; 8 conditional MATLAB tests skipped"},
+    {"phase": "source-focused", "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v tests.test_p14_module.P14IdentityAndArtifactTests.test_complete_artifact_set_has_clean_terminal_newlines_and_bounds tests.test_p14_module.P14IdentityAndArtifactTests.test_guiding_question_p13_connection_p15_boundary_and_claims_are_explicit tests.test_p14_module.P14IdentityAndArtifactTests.test_no_scaffold_placeholder_or_opaque_residue tests.test_p14_module.P14ModelContractTests tests.test_p14_module.P14LearningAndRegressionTests.test_experiment_has_baseline_two_isolated_sweeps_and_broken_case tests.test_p14_module.P14LearningAndRegressionTests.test_interactive_exposes_controls_scenarios_two_views_and_bound_callbacks tests.test_p14_module.P14LearningAndRegressionTests.test_fixed_diagnostics_reset_controls_before_rendering tests.test_p14_module.P14LearningAndRegressionTests.test_executable_checks_cover_complete_failure_and_recovery_contract tests.test_p14_module.P14LearningAndRegressionTests.test_tutor_text_is_mechanism_first_one_prediction_and_teach_back tests.test_p14_module.P14LearningAndRegressionTests.test_claim_language_separates_simulated_runtime_concurrency_and_physical_evidence tests.test_p14_module.P14LearningAndRegressionTests.test_cli_check_resolves_p14_public_matlab_entry_point", "exit_code": 0, "result": "19 tests passed"},
+    {"phase": "source hygiene", "command": "git diff --check", "exit_code": 0, "result": "pass"},
+    {"phase": "disposable intended-final-state", "command": "cd /tmp/p14-final-state.0nePyT/repo && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v tests.test_p14_module.P14IdentityAndArtifactTests tests.test_p14_module.P14ModelContractTests tests.test_p14_module.P14LearningAndRegressionTests.test_experiment_has_baseline_two_isolated_sweeps_and_broken_case tests.test_p14_module.P14LearningAndRegressionTests.test_interactive_exposes_controls_scenarios_two_views_and_bound_callbacks tests.test_p14_module.P14LearningAndRegressionTests.test_fixed_diagnostics_reset_controls_before_rendering tests.test_p14_module.P14LearningAndRegressionTests.test_executable_checks_cover_complete_failure_and_recovery_contract tests.test_p14_module.P14LearningAndRegressionTests.test_tutor_text_is_mechanism_first_one_prediction_and_teach_back tests.test_p14_module.P14LearningAndRegressionTests.test_claim_language_separates_simulated_runtime_concurrency_and_physical_evidence tests.test_p14_module.P14LearningAndRegressionTests.test_cli_start_routes_p14_and_persists_only_isolated_progress tests.test_p14_module.P14LearningAndRegressionTests.test_cli_check_resolves_p14_public_matlab_entry_point", "exit_code": 0, "result": "21 tests passed"},
+    {"phase": "disposable intended-final-state", "command": "cd /tmp/p14-final-state.0nePyT/repo && MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py", "exit_code": 0, "result": "VERIFY PASS: 24 modules"},
+    {"phase": "disposable intended-final-state", "command": "cd /tmp/p14-final-state.0nePyT/repo && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p14_module -v", "exit_code": 0, "result": "24 tests ran; 23 passed; 1 conditional MATLAB test skipped"},
+    {"phase": "disposable intended-final-state", "command": "cd /tmp/p14-final-state.0nePyT/repo && MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v", "exit_code": 0, "result": "270 tests ran successfully; 9 conditional MATLAB tests skipped"},
+    {"phase": "disposable intended-final-state", "command": "cd /tmp/p14-final-state.0nePyT/repo && MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh", "exit_code": 0, "result": "VERIFY PASS: 24 modules; 270 tests ran successfully; 9 conditional MATLAB tests skipped; log verify-20260823-120822.log"},
+    {"phase": "structured evidence", "command": "python3 -c \"import json; from pathlib import Path; import jsonschema; jsonschema.validate(json.loads(Path('modules/14-prevent-ring-buffer-overrun/evidence.json').read_text()), json.loads(Path('.github/codex/schemas/evidence.schema.json').read_text())); print('P14 STRUCTURED EVIDENCE PASS')\"", "exit_code": 0, "result": "P14 STRUCTURED EVIDENCE PASS"},
+    {"phase": "real post-transition", "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p14_module -v", "exit_code": 0, "result": "24 tests ran; 23 passed; 1 conditional MATLAB test skipped"},
+    {"phase": "real post-transition", "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py", "exit_code": 0, "result": "VERIFY PASS: 24 modules"},
+    {"phase": "real post-transition", "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v", "exit_code": 0, "result": "270 tests ran successfully; 9 conditional MATLAB tests skipped"},
+    {"phase": "real post-transition", "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh", "exit_code": 0, "result": "VERIFY PASS: 24 modules; 270 tests ran successfully; 9 conditional MATLAB tests skipped; log verify-20260823-120922.log"},
+    {"phase": "post-audit", "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh", "exit_code": 0, "result": "VERIFY PASS: 24 modules; 270 tests ran successfully; 9 conditional MATLAB tests skipped; log verify-20260823-122348.log"},
+    {"phase": "settled retained evidence", "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p14_module -v", "exit_code": 0, "result": "24 tests ran; 23 passed; 1 conditional MATLAB test skipped"},
+    {"phase": "settled retained evidence", "command": "python3 -c \"import json; from pathlib import Path; import jsonschema; jsonschema.validate(json.loads(Path('modules/14-prevent-ring-buffer-overrun/evidence.json').read_text()), json.loads(Path('.github/codex/schemas/evidence.schema.json').read_text())); print('P14 STRUCTURED EVIDENCE PASS')\"", "exit_code": 0, "result": "P14 STRUCTURED EVIDENCE PASS"},
+    {"phase": "settled retained evidence", "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh", "exit_code": 0, "result": "VERIFY PASS: 24 modules; 270 tests ran successfully; 9 conditional MATLAB tests skipped; log verify-20260823-123024.log"},
+    {"phase": "final direct verification", "command": "PYTHONDONTWRITEBYTECODE=1 python scripts/verify.py", "exit_code": 0, "result": "VERIFY PASS: 24 modules"},
+    {"phase": "final public CLI inspection", "command": "./bin/learn status && ./bin/learn check P14", "exit_code": 0, "result": "24 modules; 14 implemented; P14 routes to run_module_checks('P14')"},
+    {"phase": "final hygiene", "command": "git diff --check && git diff --cached --quiet && sha256sum contracts/active-batch.yaml contracts/repo-profile.yaml .learning/progress.json", "exit_code": 0, "result": "diff and staging clean; all three protected hashes unchanged"},
+    {"phase": "independent system-risk repair", "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p14_module -v", "exit_code": 0, "result": "25 tests ran; 24 passed; 1 conditional MATLAB test skipped"},
+    {"phase": "independent system-risk repair", "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py", "exit_code": 0, "result": "VERIFY PASS: 24 modules"},
+    {"phase": "independent system-risk repair", "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v", "exit_code": 0, "result": "271 tests ran successfully; 9 conditional MATLAB tests skipped"},
+    {"phase": "independent system-risk repair", "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh", "exit_code": 0, "result": "VERIFY PASS: 24 modules; 271 tests ran successfully; 9 conditional MATLAB tests skipped; final retained-evidence log verify-20260823-124643.log"}
+  ],
+  "acceptance": [
+    {"criterion": "Preserve the exact P14 guiding question", "status": "pass", "evidence": "Manifest and module text retain the canonical question."},
+    {"criterion": "Follow the mechanism-first learning flow", "status": "pass", "evidence": "One prediction, baseline, reset levers, changed views, and explanations are retained."},
+    {"criterion": "Provide baseline, labels, two sweeps, and broken case", "status": "pass", "evidence": "Independent oracle vectors and source figures cover all required transitions."},
+    {"criterion": "Separate model and presentation and expose controls", "status": "pass", "evidence": "Pure model and bound interactive controls are statically verified."},
+    {"criterion": "Connect P13 and P15 without syntax-first teaching", "status": "pass", "evidence": "Prerequisite and forward boundaries are explicit."},
+    {"criterion": "Include invariants, limits, interpretation, and teach-back", "status": "pass", "evidence": "Executable and tutor checks cover normal and failure contracts, including fractional equal-time ordering."},
+    {"criterion": "Advance manifest only after verification", "status": "pass", "evidence": "Disposable intended-final-state focused, contract, and repository-wide source gates passed first."},
+    {"criterion": "Keep evidence classes distinct", "status": "pass", "evidence": "Static/reference claims and unperformed runtime/physical validation are explicit."}
+  ],
+  "changed_invariants": [
+    "P14 owns a counted all-slots-usable ring with explicit event ordering.",
+    "Every source ID has one consumed, pending, dropped, or overwritten classification.",
+    "Full, loss, backpressure stall, timeout, and cancellation are separate observations.",
+    "Producer-ready times use the documented origin-anchored schedule plus accumulated backpressure stall, preventing recurrence roundoff from changing equal-time ordering.",
+    "Positive delayed producer and timeout intervals must advance at double precision.",
+    "Named diagnostic fixtures replace overrides, and returning to editable baseline restores defaults.",
+    "P14 permanent tests do not freeze the moving curriculum frontier."
+  ],
+  "residual_risks": [
+    "No MATLAB runtime or UI execution was available.",
+    "Serialized synthetic events do not prove concurrent atomicity, cache coherence, DMA flow control, or hardware timing.",
+    "Educational effectiveness requires a learner session and teach-back."
+  ],
+  "unperformed_validation": [
+    "MATLAB/Octave runtime, numerical source execution, figure rendering, and UI interaction",
+    "physical concurrency, DMA/ADC, bench, HIL, field, RT1/RT2, or Unreal validation",
+    "signing, release, deployment, staging, or production validation",
+    "remote Portfolio Control validation and target Quality workflow",
+    "learner playtest and teach-back"
+  ]
+}

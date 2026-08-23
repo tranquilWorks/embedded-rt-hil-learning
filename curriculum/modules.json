@@ -237,12 +237,12 @@
       "phase_title": "Data movement and timing",
       "slug": "prevent-ring-buffer-overrun",
       "folder": "modules/14-prevent-ring-buffer-overrun",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P14",
       "prerequisites": [
         "P13"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 15,

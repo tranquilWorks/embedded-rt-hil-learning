@@ -1,11 +1,247 @@
 %% P14 - Prevent Ring-Buffer Overrun
-% This module is curriculum-scaffolded but not implemented yet.
-%
-% Required read-visualize-lever-visualize-read build sequence:
-% 1. read a concise mental model and establish a deterministic baseline
-% 2. visualize at least two complementary outputs with labels and units
-% 3. move one meaningful lever and visualize its isolated effect
-% 4. reset, move a second independent lever, and visualize the tradeoff
-% 5. read/explain the mechanism, then break one named assumption
-% 6. finish with numerical checks and a short teach-back
-error('P14 is scaffolded. Activate its governed implementation batch before tutor use.');
+% What inputs, observable effects, and failure modes matter when you prevent
+% Ring-Buffer Overrun?
+% P13 made record-completion timing visible. P14 begins after that handoff:
+% producer-ready records meet finite storage and an independent consumer.
+modelFcn = @model;
+scenarioFcn = @p14_scenario;
+runFixture = @(input) modelFcn(input.source_samples, ...
+    input.producer_period_us, input.consumer_period_us, ...
+    input.consumer_quota_samples, input.consumer_start_us, ...
+    input.capacity_samples, input.overrun_policy, ...
+    input.drain_timeout_us, input.timeout_action);
+
+%% Read the counted-ring rule and make one prediction
+% All C slots are usable. Occupancy q, rather than wrapped pointer equality,
+% distinguishes empty (q=0) from full (q=C). At an equal timestamp the
+% consumer drains first, then the producer attempts one write.
+% Prediction: if the average producer and consumer capacities are equal,
+% how much finite capacity does the phase-aligned trace actually need?
+
+%% Baseline - equal average rates without overrun
+baselineInput = scenarioFcn('baseline');
+baseline = runFixture(baselineInput);
+baselineRepeat = runFixture(baselineInput);
+assert(isequaln(baseline, baselineRepeat), ...
+    'The deterministic P14 baseline must repeat exactly.');
+expectedOccupancy = repmat([1 2 3 4], 1, 8);
+expectedAgeUs = repmat([200 150 100 50], 1, 8);
+assert(isequal(baseline.producer.occupancy_after, expectedOccupancy) && ...
+    baseline.metrics.peak_occupancy_samples == 4 && ...
+    baseline.metrics.finite_trace_required_capacity_samples == 4 && ...
+    baseline.metrics.data_loss_count == 0 && ...
+    isequal(baseline.consumer.consumed_source_id, 1:32) && ...
+    isequal(baseline.consumer.age_us, expectedAgeUs) && ...
+    baseline.observation.campaign_completion_us == 1600, ...
+    'Baseline reference values changed.');
+
+figure('Name', 'P14 baseline ring occupancy');
+stairs(baseline.ring.event_time_us, baseline.ring.occupancy_after, ...
+    'LineWidth', 1.5);
+hold on;
+plot([baseline.ring.event_time_us(1) baseline.ring.event_time_us(end)], ...
+    baseline.input.capacity_samples .* [1 1], '--', 'LineWidth', 1.2);
+hold off;
+grid on;
+xlabel('Time from first P13-ready record (us)');
+ylabel('Ring occupancy (sample)');
+title('Consumer-before-producer ordering keeps the baseline below capacity');
+legend('Occupancy after event', 'Usable capacity', 'Location', 'best');
+
+figure('Name', 'P14 baseline record residence');
+stem(baseline.consumer.consumed_source_id, ...
+    baseline.consumer.age_us, 'filled');
+grid on;
+xlabel('Consumed source record (index)');
+ylabel('Write-to-consume residence (us)');
+title('FIFO identity and residence time are separate from occupancy');
+
+fprintf(['Baseline: rho=%.2f, required C=%d sample, peak=%d sample, ' ...
+    'loss=%d, drain=%g us.\n'], baseline.metrics.offered_load_ratio, ...
+    baseline.metrics.finite_trace_required_capacity_samples, ...
+    baseline.metrics.peak_occupancy_samples, ...
+    baseline.metrics.data_loss_count, ...
+    baseline.observation.campaign_completion_us);
+
+%% Sweep 1 - change only usable capacity
+capacitySweepSamples = [1 2 3 4 6 8];
+capacityLostCount = zeros(size(capacitySweepSamples));
+capacityPeakSamples = zeros(size(capacitySweepSamples));
+capacityConsumedCount = zeros(size(capacitySweepSamples));
+for sweepIndex = 1:numel(capacitySweepSamples)
+    sweptInput = baselineInput;
+    sweptInput.capacity_samples = capacitySweepSamples(sweepIndex);
+    swept = runFixture(sweptInput);
+    capacityLostCount(sweepIndex) = swept.metrics.data_loss_count;
+    capacityPeakSamples(sweepIndex) = ...
+        swept.metrics.peak_occupancy_samples;
+    capacityConsumedCount(sweepIndex) = swept.metrics.consumed_count;
+    assert(swept.input.producer_period_us == ...
+        baseline.input.producer_period_us && ...
+        swept.input.consumer_period_us == ...
+        baseline.input.consumer_period_us && ...
+        swept.input.consumer_quota_samples == ...
+        baseline.input.consumer_quota_samples && ...
+        strcmp(swept.input.overrun_policy, ...
+        baseline.input.overrun_policy), ...
+        'Capacity sweep must isolate capacity.');
+end
+assert(isequal(capacityLostCount, [24 16 8 0 0 0]) && ...
+    isequal(capacityPeakSamples, [1 2 3 4 4 4]) && ...
+    isequal(capacityConsumedCount, [8 16 24 32 32 32]), ...
+    'Capacity sweep reference vectors changed.');
+
+figure('Name', 'P14 capacity sweep');
+plot(capacitySweepSamples, capacityLostCount, '-o', 'LineWidth', 1.5);
+hold on;
+plot(capacitySweepSamples, capacityPeakSamples, '-s', 'LineWidth', 1.5);
+hold off;
+grid on;
+xlabel('Usable ring capacity (sample)');
+ylabel('Records or occupancy (sample)');
+title('Capacity absorbs the finite four-record phase burst');
+legend('Lost records', 'Peak occupancy', 'Location', 'best');
+
+%% Mechanism for sweep 1
+% The average rates did not move. Capacity below four cannot absorb the
+% phase-aligned records accumulated before each consumer visit. Capacity
+% four is sufficient for this finite trace; extra slots add headroom but do
+% not change the offered load.
+
+%% Sweep 2 - reset, then change only consumer quota
+quotaSweepSamples = [1 2 3 4 5 8];
+quotaLostCount = zeros(size(quotaSweepSamples));
+quotaPeakSamples = zeros(size(quotaSweepSamples));
+quotaRequiredCapacity = zeros(size(quotaSweepSamples));
+quotaOfferedLoadPct = zeros(size(quotaSweepSamples));
+quotaDrainUs = zeros(size(quotaSweepSamples));
+for sweepIndex = 1:numel(quotaSweepSamples)
+    sweptInput = baselineInput;
+    sweptInput.consumer_quota_samples = quotaSweepSamples(sweepIndex);
+    swept = runFixture(sweptInput);
+    quotaLostCount(sweepIndex) = swept.metrics.data_loss_count;
+    quotaPeakSamples(sweepIndex) = swept.metrics.peak_occupancy_samples;
+    quotaRequiredCapacity(sweepIndex) = ...
+        swept.metrics.finite_trace_required_capacity_samples;
+    quotaOfferedLoadPct(sweepIndex) = swept.metrics.offered_load_pct;
+    quotaDrainUs(sweepIndex) = ...
+        swept.observation.campaign_completion_us;
+    assert(swept.input.capacity_samples == ...
+        baseline.input.capacity_samples && ...
+        swept.input.producer_period_us == ...
+        baseline.input.producer_period_us && ...
+        swept.input.consumer_period_us == ...
+        baseline.input.consumer_period_us && ...
+        strcmp(swept.input.overrun_policy, ...
+        baseline.input.overrun_policy), ...
+        'Consumer-quota sweep must isolate consumer service capacity.');
+end
+assert(isequal(quotaLostCount, [17 10 3 0 0 0]) && ...
+    isequal(quotaPeakSamples, [8 8 8 4 4 4]) && ...
+    isequal(quotaRequiredCapacity, [25 18 11 4 4 4]) && ...
+    isequal(quotaDrainUs, [3000 2200 2000 1600 1600 1600]), ...
+    'Consumer-quota sweep reference vectors changed.');
+
+figure('Name', 'P14 consumer quota sweep');
+yyaxis left;
+plot(quotaSweepSamples, quotaOfferedLoadPct, '-o', 'LineWidth', 1.5);
+ylabel('Unthrottled offered load (%)');
+yyaxis right;
+plot(quotaSweepSamples, quotaLostCount, '-s', 'LineWidth', 1.5);
+hold on;
+plot(quotaSweepSamples, quotaRequiredCapacity, '-^', 'LineWidth', 1.5);
+hold off;
+ylabel('Lost records or required capacity (sample)');
+grid on;
+xlabel('Consumer quota (sample/service)');
+title('Service capacity changes long-run load and finite storage demand');
+legend('Offered load', 'Lost records', 'Required capacity', ...
+    'Location', 'best');
+
+%% Mechanism for sweep 2
+% rho = T_c/(B*T_p). Values above one mean the unthrottled producer offers
+% work faster than the consumer can remove it. A large ring can survive a
+% finite campaign, but no finite capacity fixes an infinite positive drift.
+
+%% Broken case - bounded occupancy and accepted writes hide overwrite loss
+brokenInput = scenarioFcn('overwrite-oldest');
+broken = runFixture(brokenInput);
+expectedConsumed = [1 5 9 13 17 21 25 29 30 31 32];
+expectedOverwritten = ...
+    [2 3 4 6 7 8 10 11 12 14 15 16 18 19 20 22 23 24 26 27 28];
+assert(broken.metrics.occupancy_bound_respected && ...
+    broken.metrics.dropped_newest_count == 0 && ...
+    broken.metrics.accepted_write_count == 32 && ...
+    broken.metrics.overwritten_oldest_count == 21 && ...
+    isequal(broken.consumer.consumed_source_id, expectedConsumed) && ...
+    isequal(find(broken.producer.overwritten_oldest), ...
+    expectedOverwritten), ...
+    'The overwrite-oldest symptom changed.');
+
+figure('Name', 'P14 deliberately broken health criterion');
+stem(1:32, double(broken.producer.overwritten_oldest), 'filled');
+hold on;
+stem(broken.consumer.consumed_source_id, ...
+    2 .* ones(size(broken.consumer.consumed_source_id)), 'o');
+hold off;
+grid on;
+xlabel('Source record (index)');
+ylabel('Outcome category (unitless code)');
+yticks([0 1 2]);
+yticklabels({'retained/not final', 'overwritten', 'consumed'});
+title('Broken assumption: bounded occupancy does not prove loss-free delivery');
+
+%% Policy tradeoff, timeout, cancellation, rollback, and recovery
+dropOverload = runFixture(scenarioFcn('slow-consumer'));
+backpressured = runFixture(scenarioFcn('backpressure'));
+assert(dropOverload.metrics.data_loss_count == 17 && ...
+    backpressured.metrics.data_loss_count == 0 && ...
+    backpressured.metrics.producer_stall_event_count == 27 && ...
+    backpressured.metrics.total_producer_stall_us == 4050 && ...
+    backpressured.observation.last_producer_decision_us == 5600 && ...
+    backpressured.observation.campaign_completion_us == 6400, ...
+    'Policy tradeoff reference values changed.');
+
+equalityInput = baselineInput;
+equalityInput.drain_timeout_us = 50;
+equalityInput.timeout_action = 'cancel-consumer';
+equality = runFixture(equalityInput);
+continued = runFixture(scenarioFcn('timeout-continue'));
+cancelled = runFixture(scenarioFcn('timeout-cancel'));
+assert(~equality.observation.wait_timed_out && ...
+    equality.observation.campaign_complete && ...
+    continued.observation.wait_timed_out && ...
+    ~continued.observation.consumer_cancelled && ...
+    continued.observation.campaign_complete && ...
+    cancelled.observation.wait_timed_out && ...
+    cancelled.observation.consumer_cancelled && ...
+    isequal(cancelled.ring.pending_source_id, 29:32) && ...
+    cancelled.metrics.data_loss_count == 0, ...
+    'Drain timeout equality, continuation, or cancellation changed.');
+
+rollback = runFixture(baselineInput);
+recovered = runFixture(scenarioFcn('baseline'));
+assert(isequaln(rollback, baseline) && isequaln(recovered, baseline), ...
+    'Clean pure-model input must provide exact computational recovery.');
+
+figure('Name', 'P14 cancellation boundary');
+bar([continued.metrics.consumed_count cancelled.metrics.consumed_count; ...
+    continued.metrics.pending_count cancelled.metrics.pending_count]');
+grid on;
+xlabel('Timeout action (case)');
+ylabel('Record classification (sample)');
+xticklabels({'continue waiting', 'cancel consumer'});
+legend('Consumed', 'Pending', 'Location', 'best');
+title('Cancellation retains queued records; it does not roll them back');
+
+disp(['Drop and overwrite choose which records are lost. Backpressure ' ...
+    'avoids loss only when the producer can really be throttled.']);
+disp(['A timeout is a synthetic drain observation boundary; canceling ' ...
+    'the consumer retains pending data and is not transactional rollback.']);
+disp(['These source calculations are static/simulated references, not ' ...
+    'MATLAB-runtime, UI, atomicity, DMA, hardware, bench, HIL, field, ' ...
+    'or production validation.']);
+
+%% Explore one lever at a time
+% Run interactive to change capacity, producer/consumer timing, quota,
+% policy, and timeout while keeping the source record identities fixed.
