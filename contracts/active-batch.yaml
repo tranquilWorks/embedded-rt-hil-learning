@@ -1,34 +1,34 @@
 schema_version: 1
 batch:
-  id: P07
-  title: 'Implement P07: Sample an ADC Without Aliasing'
-  goal: Implement P07 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
-    failure modes matter when you sample an ADC Without Aliasing?' through visible cause and effect.
+  id: P08
+  title: 'Implement P08: Command a DAC and Observe Settling'
+  goal: Implement P08 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
+    failure modes matter when you command a DAC and Observe Settling?' through visible cause and effect.
 sources:
   product: products/embedded-rt-hil-learning/product.yaml
   requirements:
   - products/embedded-rt-hil-learning/PRD.md#cap-module-01--complete-learning-slice
   - products/embedded-rt-hil-learning/acceptance.yaml#CAP-MODULE-01
-  - modules/07-sample-an-adc-without-aliasing/README.md
+  - modules/08-command-a-dac-and-observe-settling/README.md
   milestone: products/embedded-rt-hil-learning/milestones/ERH-M2.md
   baseline_commit: 0ab836efcace36158687a467f64225bd5cff8177
   control_plane_repository: kpbianco/portfolio-control
-  control_plane_path: products/embedded-rt-hil-learning/batches/P07.yaml
+  control_plane_path: products/embedded-rt-hil-learning/batches/P08.yaml
   control_plane_revision: 4434b282cfb47997d791bd2933faf980453d199a  # pragma: allowlist secret
 dependencies:
-- P06
+- P07
 scope:
   allowed_paths:
-  - modules/07-sample-an-adc-without-aliasing/**
+  - modules/08-command-a-dac-and-observe-settling/**
   - curriculum/modules.json
   - README.md
   - START_HERE.md
   - modules/README.md
   - bin/learn
   - bin/learn.py
-  - docs/plans/P07-*.md
-  - docs/evidence/P07-*.md
-  - tests/test_p07*.py
+  - docs/plans/P08-*.md
+  - docs/evidence/P08-*.md
+  - tests/test_p08*.py
   - tests/test_curriculum.py
   - tests/test_learn_cli.py
   forbidden_paths:
@@ -43,8 +43,8 @@ scope:
   - docs/TUTOR_PROTOCOL.md
   - Makefile
 acceptance:
-- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you sample
-  an ADC Without Aliasing?'
+- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you command
+  a DAC and Observe Settling?'
 - The learner flow visibly follows read, baseline, one lever, changed view, and mechanism-first explanation.
 - experiment.m has a deterministic baseline, labeled plots and metrics, two independent sweeps, and one
   deliberately broken case.
@@ -60,10 +60,10 @@ validation:
   - MATLAB_LEARNING_VERIFY_PROFILE=quick python3 -m unittest discover -s tests -v
   - MATLAB_LEARNING_VERIFY_PROFILE=full ./scripts/agent-verify.sh
   focused_tests_to_add:
-  - P07 artifact completeness and manifest identity
-  - P07 deterministic model and limiting-case checks
-  - P07 two-sweep and broken-case regression
-  - P07 placeholder and opaque-black-box regression
+  - P08 artifact completeness and manifest identity
+  - P08 deterministic model and limiting-case checks
+  - P08 two-sweep and broken-case regression
+  - P08 placeholder and opaque-black-box regression
   required_ci:
   - Portfolio Control validation
   - target Quality workflow
@@ -80,10 +80,10 @@ risk:
   - changes exceed allowed paths
   - expected result conflicts with the governing model
 rollback:
-  strategy: Revert P07 implementation changes and restore only its manifest status to scaffolded.
+  strategy: Revert P08 implementation changes and restore only its manifest status to scaffolded.
 evidence:
   output:
-  - docs/evidence/P07-<date>.md
+  - docs/evidence/P08-<date>.md
   - validation commands and exit results
   - figure, control, metric, and unit inventory
   - acceptance map, runtime inventory, and limitations

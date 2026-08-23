@@ -141,12 +141,12 @@
       "phase_title": "Buses and acquisition",
       "slug": "command-a-dac-and-observe-settling",
       "folder": "modules/08-command-a-dac-and-observe-settling",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P08",
       "prerequisites": [
         "P07"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 9,
