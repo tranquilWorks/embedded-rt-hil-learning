@@ -189,12 +189,12 @@
       "phase_title": "RTOS behavior",
       "slug": "protect-shared-data-without-excess-blocking",
       "folder": "modules/11-protect-shared-data-without-excess-blocking",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P11",
       "prerequisites": [
         "P10"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 12,
