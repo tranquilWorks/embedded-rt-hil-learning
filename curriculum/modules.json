@@ -61,12 +61,12 @@
       "phase_title": "Microcontroller execution",
       "slug": "compare-polling-and-interrupts",
       "folder": "modules/03-compare-polling-and-interrupts",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P03",
       "prerequisites": [
         "P02"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 4,
