@@ -253,12 +253,12 @@
       "phase_title": "Data movement and timing",
       "slug": "align-clocks-with-pps-and-timestamps",
       "folder": "modules/15-align-clocks-with-pps-and-timestamps",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P15",
       "prerequisites": [
         "P14"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 16,
