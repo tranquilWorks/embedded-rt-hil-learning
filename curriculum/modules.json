@@ -109,12 +109,12 @@
       "phase_title": "Buses and acquisition",
       "slug": "compare-spi-and-i2c-transactions",
       "folder": "modules/06-compare-spi-and-i2c-transactions",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P06",
       "prerequisites": [
         "P05"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 7,
