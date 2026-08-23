@@ -1,35 +1,35 @@
 schema_version: 1
 batch:
-  id: P11
-  title: 'Implement P11: Protect Shared Data Without Excess Blocking'
-  goal: Implement P11 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
-    failure modes matter when you protect Shared Data Without Excess Blocking?' through visible cause
+  id: P12
+  title: 'Implement P12: Measure Jitter and Worst-Case Response Time'
+  goal: Implement P12 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
+    failure modes matter when you measure Jitter and Worst-Case Response Time?' through visible cause
     and effect.
 sources:
   product: products/embedded-rt-hil-learning/product.yaml
   requirements:
   - products/embedded-rt-hil-learning/PRD.md#cap-module-01--complete-learning-slice
   - products/embedded-rt-hil-learning/acceptance.yaml#CAP-MODULE-01
-  - modules/11-protect-shared-data-without-excess-blocking/README.md
+  - modules/12-measure-jitter-and-worst-case-response-time/README.md
   milestone: products/embedded-rt-hil-learning/milestones/ERH-M3.md
   baseline_commit: 0ab836efcace36158687a467f64225bd5cff8177
   control_plane_repository: kpbianco/portfolio-control
-  control_plane_path: products/embedded-rt-hil-learning/batches/P11.yaml
+  control_plane_path: products/embedded-rt-hil-learning/batches/P12.yaml
   control_plane_revision: 4434b282cfb47997d791bd2933faf980453d199a  # pragma: allowlist secret
 dependencies:
-- P10
+- P11
 scope:
   allowed_paths:
-  - modules/11-protect-shared-data-without-excess-blocking/**
+  - modules/12-measure-jitter-and-worst-case-response-time/**
   - curriculum/modules.json
   - README.md
   - START_HERE.md
   - modules/README.md
   - bin/learn
   - bin/learn.py
-  - docs/plans/P11-*.md
-  - docs/evidence/P11-*.md
-  - tests/test_p11*.py
+  - docs/plans/P12-*.md
+  - docs/evidence/P12-*.md
+  - tests/test_p12*.py
   - tests/test_curriculum.py
   - tests/test_learn_cli.py
   forbidden_paths:
@@ -44,8 +44,8 @@ scope:
   - docs/TUTOR_PROTOCOL.md
   - Makefile
 acceptance:
-- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you protect
-  Shared Data Without Excess Blocking?'
+- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you measure
+  Jitter and Worst-Case Response Time?'
 - The learner flow visibly follows read, baseline, one lever, changed view, and mechanism-first explanation.
 - experiment.m has a deterministic baseline, labeled plots and metrics, two independent sweeps, and one
   deliberately broken case.
@@ -61,10 +61,10 @@ validation:
   - MATLAB_LEARNING_VERIFY_PROFILE=quick python3 -m unittest discover -s tests -v
   - MATLAB_LEARNING_VERIFY_PROFILE=full ./scripts/agent-verify.sh
   focused_tests_to_add:
-  - P11 artifact completeness and manifest identity
-  - P11 deterministic model and limiting-case checks
-  - P11 two-sweep and broken-case regression
-  - P11 placeholder and opaque-black-box regression
+  - P12 artifact completeness and manifest identity
+  - P12 deterministic model and limiting-case checks
+  - P12 two-sweep and broken-case regression
+  - P12 placeholder and opaque-black-box regression
   required_ci:
   - Portfolio Control validation
   - target Quality workflow
@@ -81,10 +81,10 @@ risk:
   - changes exceed allowed paths
   - expected result conflicts with the governing model
 rollback:
-  strategy: Revert P11 implementation changes and restore only its manifest status to scaffolded.
+  strategy: Revert P12 implementation changes and restore only its manifest status to scaffolded.
 evidence:
   output:
-  - docs/evidence/P11-<date>.md
+  - docs/evidence/P12-<date>.md
   - validation commands and exit results
   - figure, control, metric, and unit inventory
   - acceptance map, runtime inventory, and limitations
