@@ -173,12 +173,12 @@
       "phase_title": "RTOS behavior",
       "slug": "trigger-priority-inversion",
       "folder": "modules/10-trigger-priority-inversion",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P10",
       "prerequisites": [
         "P09"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 11,
