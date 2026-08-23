@@ -205,12 +205,12 @@
       "phase_title": "RTOS behavior",
       "slug": "measure-jitter-and-worst-case-response-time",
       "folder": "modules/12-measure-jitter-and-worst-case-response-time",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P12",
       "prerequisites": [
         "P11"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 13,
