@@ -1,35 +1,34 @@
 schema_version: 1
 batch:
-  id: P12
-  title: 'Implement P12: Measure Jitter and Worst-Case Response Time'
-  goal: Implement P12 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
-    failure modes matter when you measure Jitter and Worst-Case Response Time?' through visible cause
-    and effect.
+  id: P13
+  title: 'Implement P13: Move Samples with DMA'
+  goal: Implement P13 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
+    failure modes matter when you move Samples with DMA?' through visible cause and effect.
 sources:
   product: products/embedded-rt-hil-learning/product.yaml
   requirements:
   - products/embedded-rt-hil-learning/PRD.md#cap-module-01--complete-learning-slice
   - products/embedded-rt-hil-learning/acceptance.yaml#CAP-MODULE-01
-  - modules/12-measure-jitter-and-worst-case-response-time/README.md
-  milestone: products/embedded-rt-hil-learning/milestones/ERH-M3.md
+  - modules/13-move-samples-with-dma/README.md
+  milestone: products/embedded-rt-hil-learning/milestones/ERH-M4.md
   baseline_commit: 0ab836efcace36158687a467f64225bd5cff8177
   control_plane_repository: kpbianco/portfolio-control
-  control_plane_path: products/embedded-rt-hil-learning/batches/P12.yaml
+  control_plane_path: products/embedded-rt-hil-learning/batches/P13.yaml
   control_plane_revision: 4434b282cfb47997d791bd2933faf980453d199a  # pragma: allowlist secret
 dependencies:
-- P11
+- P12
 scope:
   allowed_paths:
-  - modules/12-measure-jitter-and-worst-case-response-time/**
+  - modules/13-move-samples-with-dma/**
   - curriculum/modules.json
   - README.md
   - START_HERE.md
   - modules/README.md
   - bin/learn
   - bin/learn.py
-  - docs/plans/P12-*.md
-  - docs/evidence/P12-*.md
-  - tests/test_p12*.py
+  - docs/plans/P13-*.md
+  - docs/evidence/P13-*.md
+  - tests/test_p13*.py
   - tests/test_curriculum.py
   - tests/test_learn_cli.py
   forbidden_paths:
@@ -44,8 +43,8 @@ scope:
   - docs/TUTOR_PROTOCOL.md
   - Makefile
 acceptance:
-- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you measure
-  Jitter and Worst-Case Response Time?'
+- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you move
+  Samples with DMA?'
 - The learner flow visibly follows read, baseline, one lever, changed view, and mechanism-first explanation.
 - experiment.m has a deterministic baseline, labeled plots and metrics, two independent sweeps, and one
   deliberately broken case.
@@ -61,10 +60,10 @@ validation:
   - MATLAB_LEARNING_VERIFY_PROFILE=quick python3 -m unittest discover -s tests -v
   - MATLAB_LEARNING_VERIFY_PROFILE=full ./scripts/agent-verify.sh
   focused_tests_to_add:
-  - P12 artifact completeness and manifest identity
-  - P12 deterministic model and limiting-case checks
-  - P12 two-sweep and broken-case regression
-  - P12 placeholder and opaque-black-box regression
+  - P13 artifact completeness and manifest identity
+  - P13 deterministic model and limiting-case checks
+  - P13 two-sweep and broken-case regression
+  - P13 placeholder and opaque-black-box regression
   required_ci:
   - Portfolio Control validation
   - target Quality workflow
@@ -81,10 +80,10 @@ risk:
   - changes exceed allowed paths
   - expected result conflicts with the governing model
 rollback:
-  strategy: Revert P12 implementation changes and restore only its manifest status to scaffolded.
+  strategy: Revert P13 implementation changes and restore only its manifest status to scaffolded.
 evidence:
   output:
-  - docs/evidence/P12-<date>.md
+  - docs/evidence/P13-<date>.md
   - validation commands and exit results
   - figure, control, metric, and unit inventory
   - acceptance map, runtime inventory, and limitations

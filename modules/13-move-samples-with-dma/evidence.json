@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "batch_id": "P13",
+  "status": "pass",
+  "commands": [
+    {
+      "phase": "pre-change baseline",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "pre-change baseline",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "218 tests passed; 7 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "source-focused before manifest transition",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v [21 explicitly retained P13 source selectors in the Markdown record]",
+      "exit_code": 0,
+      "result": "21 tests passed"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p13_module -v",
+      "exit_code": 0,
+      "result": "25 tests passed; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "243 tests passed; 8 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "243 tests passed; 8 conditional MATLAB tests skipped; log verify-20260823-104909.log"
+    },
+    {
+      "phase": "real post-transition",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p13_module -v",
+      "exit_code": 0,
+      "result": "25 tests passed; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "real post-transition",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "real post-transition",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "243 tests passed; 8 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "real post-transition",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "243 tests passed; 8 conditional MATLAB tests skipped; log verify-20260823-104935.log"
+    },
+    {
+      "phase": "repository-required direct verification",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "post-audit focused repair",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p13_module -v",
+      "exit_code": 0,
+      "result": "26 tests passed; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "settled retained evidence",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p13_module -v",
+      "exit_code": 0,
+      "result": "27 tests passed; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "settled retained evidence",
+      "command": "jsonschema.validate(modules/13-move-samples-with-dma/evidence.json, .github/codex/schemas/evidence.schema.json)",
+      "exit_code": 0,
+      "result": "P13 STRUCTURED EVIDENCE PASS"
+    },
+    {
+      "phase": "settled retained evidence",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "settled retained evidence",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "245 tests passed; 8 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "settled retained evidence",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules; 245 tests passed; 8 conditional MATLAB tests skipped; log verify-20260823-110807.log"
+    },
+    {
+      "phase": "final direct verification",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "final public CLI inspection",
+      "command": "./bin/learn status && ./bin/learn check P13",
+      "exit_code": 0,
+      "result": "24 modules; 13 implemented; P13 routes to run_module_checks('P13')"
+    },
+    {
+      "phase": "final scope and state audit",
+      "command": "git diff --check; read-only allowed-path, EOF, manifest, SHA-256, and staging assertions",
+      "exit_code": 0,
+      "result": "17 owned paths allowed; 1 pre-existing dirty contract preserved; 18 text EOFs clean; P01-P13 contiguous; protected hashes unchanged; no staged changes"
+    },
+    {
+      "phase": "independent system-risk repair",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p13_module -v",
+      "exit_code": 0,
+      "result": "28 tests ran; 27 passed; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "independent system-risk repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "independent system-risk repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "246 tests ran successfully; 8 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "independent system-risk repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules; 246 tests ran successfully; 8 conditional MATLAB tests skipped; log verify-20260823-112128.log"
+    },
+    {
+      "phase": "post-record system-risk validation",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "post-record system-risk validation",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "246 tests ran successfully; 8 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "post-record system-risk validation",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules; 246 tests ran successfully; 8 conditional MATLAB tests skipped; log verify-20260823-112253.log"
+    }
+  ],
+  "acceptance": [
+    {
+      "criterion": "Preserve the exact P13 guiding question",
+      "status": "pass",
+      "evidence": "Manifest, module text, executable checks, and durable tests retain the canonical question."
+    },
+    {
+      "criterion": "Follow read, baseline, one lever, changed view, and mechanism-first explanation",
+      "status": "pass",
+      "evidence": "The lesson, experiment, and walkthrough retain one prediction and reset between levers."
+    },
+    {
+      "criterion": "Provide deterministic baseline, labels, two independent sweeps, and a broken case",
+      "status": "pass",
+      "evidence": "Independent oracle tests retain exact baseline, block-size, bus-rate, and fixed-address results."
+    },
+    {
+      "criterion": "Separate model calculation from presentation and expose meaningful controls",
+      "status": "pass",
+      "evidence": "model.m is presentation-free; interactive.m exposes discrete and bounded physical/computational controls."
+    },
+    {
+      "criterion": "Connect lesson and walkthrough to prerequisites without syntax-first teaching",
+      "status": "pass",
+      "evidence": "P12 is the explicit entrance concept and P14 ring-buffer policy remains deferred."
+    },
+    {
+      "criterion": "Include independent invariants, limiting cases, interpretation, and teach-back",
+      "status": "pass",
+      "evidence": "Python oracle tests and run_checks.m cover normal, malformed, timeout, abort, recovery, compatibility, and resource cases."
+    },
+    {
+      "criterion": "Transition manifest only after focused and repository-wide verification",
+      "status": "pass",
+      "evidence": "All four intended-final-state gates passed in a disposable copy before the real implemented/simulated transition."
+    },
+    {
+      "criterion": "Distinguish static evidence from runtime, UI, numerical, bench, HIL, and field evidence",
+      "status": "pass",
+      "evidence": "The module and retained evidence explicitly limit claims to static and independent simulated arithmetic."
+    }
+  ],
+  "changed_invariants": [
+    "P13 now owns a deterministic serialized DMA-beat model and complete learning slice.",
+    "Completion timing is separated from destination integrity and completion-block ownership.",
+    "Abort exposes only committed beats, complete blocks, observed bus service, and equal-work CPU accounting.",
+    "Final-short-block ownership uses the actual descriptor tail and retains endpoint, readiness, notification-demand, and integrity behavior.",
+    "The payload-rate sweep uses separate labeled axes for offered load percent and request latency microseconds.",
+    "P13 tests assert permanent P13 facts without freezing a moving curriculum frontier."
+  ],
+  "residual_risks": [
+    "MATLAB source, figures, controls, and callbacks were not executed because no MATLAB runtime was available.",
+    "The finite constant-service single-engine model does not represent all controller, bus, cache, interrupt, or peripheral behavior.",
+    "CPU service-demand arithmetic is not measured utilization, WCET/WCRT, or a scheduler guarantee.",
+    "Educational effectiveness still requires a learner session and teach-back."
+  ],
+  "unperformed_validation": [
+    "MATLAB and Octave runtime execution, numerical checks, figure rendering, and UI interaction",
+    "physical DMA, bus, processor, interrupt, cache, coherency, peripheral, bench, HIL, field, RT1/RT2, or Unreal validation",
+    "signing, release, deployment, staging, or production validation",
+    "Portfolio Control validation and the remote target Quality workflow",
+    "learner playtest and teach-back"
+  ]
+}

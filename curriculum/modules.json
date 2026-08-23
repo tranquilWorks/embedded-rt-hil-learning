@@ -221,12 +221,12 @@
       "phase_title": "Data movement and timing",
       "slug": "move-samples-with-dma",
       "folder": "modules/13-move-samples-with-dma",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P13",
       "prerequisites": [
         "P12"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 14,
