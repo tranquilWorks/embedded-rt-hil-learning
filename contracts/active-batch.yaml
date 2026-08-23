@@ -1,34 +1,34 @@
 schema_version: 1
 batch:
-  id: P05
-  title: 'Implement P05: Frame Bytes over UART'
-  goal: Implement P05 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
-    failure modes matter when you frame Bytes over UART?' through visible cause and effect.
+  id: P06
+  title: 'Implement P06: Compare SPI and I2C Transactions'
+  goal: Implement P06 as an interactive MATLAB lesson answering 'What inputs, observable effects, and
+    failure modes matter when you compare SPI and I2C Transactions?' through visible cause and effect.
 sources:
   product: products/embedded-rt-hil-learning/product.yaml
   requirements:
   - products/embedded-rt-hil-learning/PRD.md#cap-module-01--complete-learning-slice
   - products/embedded-rt-hil-learning/acceptance.yaml#CAP-MODULE-01
-  - modules/05-frame-bytes-over-uart/README.md
+  - modules/06-compare-spi-and-i2c-transactions/README.md
   milestone: products/embedded-rt-hil-learning/milestones/ERH-M2.md
   baseline_commit: 0ab836efcace36158687a467f64225bd5cff8177
   control_plane_repository: kpbianco/portfolio-control
-  control_plane_path: products/embedded-rt-hil-learning/batches/P05.yaml
+  control_plane_path: products/embedded-rt-hil-learning/batches/P06.yaml
   control_plane_revision: 4434b282cfb47997d791bd2933faf980453d199a  # pragma: allowlist secret
 dependencies:
-- P04
+- P05
 scope:
   allowed_paths:
-  - modules/05-frame-bytes-over-uart/**
+  - modules/06-compare-spi-and-i2c-transactions/**
   - curriculum/modules.json
   - README.md
   - START_HERE.md
   - modules/README.md
   - bin/learn
   - bin/learn.py
-  - docs/plans/P05-*.md
-  - docs/evidence/P05-*.md
-  - tests/test_p05*.py
+  - docs/plans/P06-*.md
+  - docs/evidence/P06-*.md
+  - tests/test_p06*.py
   - tests/test_curriculum.py
   - tests/test_learn_cli.py
   forbidden_paths:
@@ -43,8 +43,8 @@ scope:
   - docs/TUTOR_PROTOCOL.md
   - Makefile
 acceptance:
-- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you frame
-  Bytes over UART?'
+- 'Preserve the guiding question: What inputs, observable effects, and failure modes matter when you compare
+  SPI and I2C Transactions?'
 - The learner flow visibly follows read, baseline, one lever, changed view, and mechanism-first explanation.
 - experiment.m has a deterministic baseline, labeled plots and metrics, two independent sweeps, and one
   deliberately broken case.
@@ -60,10 +60,10 @@ validation:
   - MATLAB_LEARNING_VERIFY_PROFILE=quick python3 -m unittest discover -s tests -v
   - MATLAB_LEARNING_VERIFY_PROFILE=full ./scripts/agent-verify.sh
   focused_tests_to_add:
-  - P05 artifact completeness and manifest identity
-  - P05 deterministic model and limiting-case checks
-  - P05 two-sweep and broken-case regression
-  - P05 placeholder and opaque-black-box regression
+  - P06 artifact completeness and manifest identity
+  - P06 deterministic model and limiting-case checks
+  - P06 two-sweep and broken-case regression
+  - P06 placeholder and opaque-black-box regression
   required_ci:
   - Portfolio Control validation
   - target Quality workflow
@@ -80,10 +80,10 @@ risk:
   - changes exceed allowed paths
   - expected result conflicts with the governing model
 rollback:
-  strategy: Revert P05 implementation changes and restore only its manifest status to scaffolded.
+  strategy: Revert P06 implementation changes and restore only its manifest status to scaffolded.
 evidence:
   output:
-  - docs/evidence/P05-<date>.md
+  - docs/evidence/P06-<date>.md
   - validation commands and exit results
   - figure, control, metric, and unit inventory
   - acceptance map, runtime inventory, and limitations
