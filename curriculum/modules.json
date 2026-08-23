@@ -157,12 +157,12 @@
       "phase_title": "RTOS behavior",
       "slug": "schedule-tasks-by-priority",
       "folder": "modules/09-schedule-tasks-by-priority",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P09",
       "prerequisites": [
         "P08"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 10,
