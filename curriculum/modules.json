@@ -269,12 +269,12 @@
       "phase_title": "Data movement and timing",
       "slug": "execute-a-multi-rate-processing-graph",
       "folder": "modules/16-execute-a-multi-rate-processing-graph",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P16",
       "prerequisites": [
         "P15"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 17,
