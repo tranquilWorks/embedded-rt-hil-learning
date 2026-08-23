@@ -1,5 +1,5 @@
 schema_version: 1
 profile: product-data
 source: portfolio-control/profiles/product-data.yaml
-source_revision: 62c670ca6a946d10639bd6f6cacca5c5ab213bb2  # pragma: allowlist secret
+source_revision: 4434b282cfb47997d791bd2933faf980453d199a  # pragma: allowlist secret
 autonomy_level: 1
