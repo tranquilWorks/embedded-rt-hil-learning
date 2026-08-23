@@ -1,11 +1,206 @@
 %% P05 - Frame Bytes over UART
-% This module is curriculum-scaffolded but not implemented yet.
-%
-% Required read-visualize-lever-visualize-read build sequence:
-% 1. read a concise mental model and establish a deterministic baseline
-% 2. visualize at least two complementary outputs with labels and units
-% 3. move one meaningful lever and visualize its isolated effect
-% 4. reset, move a second independent lever, and visualize the tradeoff
-% 5. read/explain the mechanism, then break one named assumption
-% 6. finish with numerical checks and a short teach-back
-error('P05 is scaffolded. Activate its governed implementation batch before tutor use.');
+% Read: P04 exposed finite clock ticks. A UART now turns one byte into
+% timed logic slots: idle high, start low, eight LSB-first data bits, an
+% optional parity bit, and high stop bits. The receiver uses its own clock.
+close all;
+
+%% Baseline - four matched-clock 8-N-1 byte frames
+input = p05_scenario('baseline');
+baseline = model(input.payload_bytes, input.tx_baud_bps, ...
+    input.receiver_error_pct, input.parity_mode, input.stop_bits, ...
+    input.inter_frame_gap_bits, input.fault, input.receive_timeout_us);
+baselineRepeat = model(input.payload_bytes, input.tx_baud_bps, ...
+    input.receiver_error_pct, input.parity_mode, input.stop_bits, ...
+    input.inter_frame_gap_bits, input.fault, input.receive_timeout_us);
+assert(isequaln(baseline, baselineRepeat), ...
+    'The deterministic UART baseline changed between identical runs.');
+assert(isequal(baseline.tx.actual_frame_bits(1, :), ...
+    [0 1 1 0 0 0 1 0 1 1]), ...
+    'Byte 163 must be start-low, LSB-first 11000101, then stop-high.');
+assert(all(baseline.rx.byte_correct) && ...
+    isequal(baseline.rx.decoded_bytes, input.payload_bytes), ...
+    'Matched-clock baseline frames must decode to the offered bytes.');
+assert(baseline.config.bits_per_frame == 10 && ...
+    abs(baseline.metrics.nominal_frame_efficiency - 0.8) < 1e-14, ...
+    '8-N-1 must spend ten line bits per eight payload bits.');
+
+frameTimeUs = baseline.config.bits_per_frame .* ...
+    baseline.config.tx_bit_period_us;
+bitEdgesUs = (0:baseline.config.bits_per_frame) .* ...
+    baseline.config.tx_bit_period_us;
+firstFrameBits = baseline.tx.actual_frame_bits(1, :);
+firstFrameSamplesUs = baseline.rx.sample_time_us(1, :) - ...
+    baseline.tx.frame_start_us(1);
+
+figure('Name', 'P05 baseline UART character framing');
+subplot(2, 1, 1);
+stairs(bitEdgesUs, [firstFrameBits firstFrameBits(end)], ...
+    'LineWidth', 1.4);
+hold on;
+plot(firstFrameSamplesUs, baseline.rx.sample_level(1, :), ...
+    'ko', 'MarkerFaceColor', 'w', 'LineWidth', 1.1);
+hold off;
+grid on;
+xlabel('Time from frame start (us)');
+ylabel('Logic level (0 or 1)');
+ylim([-0.2 1.2]);
+legend({'Transmitter slots', 'Receiver center samples'}, ...
+    'Location', 'eastoutside');
+title('Baseline view 1: start, eight LSB-first data bits, and stop');
+
+subplot(2, 1, 2);
+frameIndex = 1:baseline.input.frame_count;
+plot(frameIndex, baseline.input.payload_bytes, 'ks--', 'LineWidth', 1.2);
+hold on;
+plot(frameIndex, baseline.rx.decoded_bytes, 'bo-', 'LineWidth', 1.3);
+hold off;
+grid on;
+xlabel('Frame index');
+ylabel('Byte value (decimal)');
+legend({'Transmitted', 'Decoded'}, 'Location', 'eastoutside');
+title('Baseline view 2: every matched-clock frame reconstructs its byte');
+
+fprintf(['Baseline metrics: %.3f us/bit, %.3f us/frame, %.3f us total, ' ...
+    '8/%d = %.0f%% framing efficiency, %d/%d correct bytes.\n'], ...
+    baseline.config.tx_bit_period_us, frameTimeUs, ...
+    baseline.tx.line_time_us, baseline.config.bits_per_frame, ...
+    100 .* baseline.metrics.nominal_frame_efficiency, ...
+    baseline.metrics.correct_count, baseline.input.frame_count);
+
+%% Sweep 1 - transmitter baud, with bits and matched clocks fixed
+baudSweepBps = [9600 19200 57600 115200];
+lineTimeSweepUs = zeros(size(baudSweepBps));
+goodputSweepBps = zeros(size(baudSweepBps));
+for sweepIndex = 1:numel(baudSweepBps)
+    swept = model(input.payload_bytes, baudSweepBps(sweepIndex), 0, ...
+        input.parity_mode, input.stop_bits, input.inter_frame_gap_bits, ...
+        input.fault, input.receive_timeout_us);
+    lineTimeSweepUs(sweepIndex) = swept.tx.line_time_us;
+    goodputSweepBps(sweepIndex) = swept.metrics.payload_goodput_bps;
+    assert(isequal(swept.tx.actual_frame_bits, ...
+        baseline.tx.actual_frame_bits) && all(swept.rx.byte_correct), ...
+        'The baud lever must scale time without changing matched-clock bits.');
+end
+expectedLineTimeUs = numel(input.payload_bytes) .* 10 .* 1e6 ./ baudSweepBps;
+assert(all(abs(lineTimeSweepUs - expectedLineTimeUs) < ...
+    1e-10 .* max(1, expectedLineTimeUs)), ...
+    'Line time must equal frame count times ten bit periods for 8-N-1.');
+assert(all(abs(goodputSweepBps - 0.8 .* baudSweepBps) < ...
+    1e-10 .* baudSweepBps), ...
+    'Continuous matched 8-N-1 goodput must be eighty percent of bit rate.');
+
+figure('Name', 'P05 transmitter-baud sweep');
+subplot(2, 1, 1);
+plot(baudSweepBps, lineTimeSweepUs, 'o-', 'LineWidth', 1.3);
+grid on;
+xlabel('Transmitter baud (bit/s)');
+ylabel('Four-frame line time (us)');
+title('Lever 1 changed view: faster symbols shorten the same forty bits');
+subplot(2, 1, 2);
+plot(baudSweepBps, goodputSweepBps, 's-', 'LineWidth', 1.3);
+grid on;
+xlabel('Transmitter baud (bit/s)');
+ylabel('Correct payload goodput (bit/s)');
+title('8-N-1 payload goodput remains 8/10 of the matched line rate');
+fprintf(['Mechanism for sweep 1: T_bit = 10^6 / baud us. The receiver ' ...
+    'was reset to the same baud, so only the time scale changed.\n']);
+
+%% Sweep 2 - receiver baud error, after resetting transmitter baud
+receiverErrorSweepPct = [-8 -6 -4 0 4 6 8];
+correctByteCount = zeros(size(receiverErrorSweepPct));
+minimumMarginBits = zeros(size(receiverErrorSweepPct));
+for sweepIndex = 1:numel(receiverErrorSweepPct)
+    swept = model(input.payload_bytes, input.tx_baud_bps, ...
+        receiverErrorSweepPct(sweepIndex), input.parity_mode, ...
+        input.stop_bits, input.inter_frame_gap_bits, input.fault, ...
+        input.receive_timeout_us);
+    correctByteCount(sweepIndex) = swept.metrics.correct_count;
+    minimumMarginBits(sweepIndex) = ...
+        swept.metrics.minimum_sampling_margin_bits;
+    assert(isequal(swept.tx.actual_frame_bits, ...
+        baseline.tx.actual_frame_bits) && ...
+        swept.tx.line_time_us == baseline.tx.line_time_us, ...
+        'The receiver-clock lever must not mutate the transmitter waveform.');
+end
+safeSweep = abs(receiverErrorSweepPct) <= 4;
+assert(all(correctByteCount(safeSweep) == baseline.input.frame_count), ...
+    'This fixture must decode throughout the retained positive-margin core.');
+assert(correctByteCount(1) < baseline.input.frame_count && ...
+    correctByteCount(end) < baseline.input.frame_count && ...
+    minimumMarginBits(1) < 0 && minimumMarginBits(end) < 0, ...
+    'Large clock errors must leave the pattern-independent sample window.');
+
+figure('Name', 'P05 receiver-baud-error sweep');
+subplot(2, 1, 1);
+plot(receiverErrorSweepPct, correctByteCount, 'o-', 'LineWidth', 1.3);
+grid on;
+xlabel('Receiver baud error (%)');
+ylabel('Correct byte count');
+ylim([-0.2 baseline.input.frame_count + 0.2]);
+title('Lever 2 changed view: the receiver clock moves every center sample');
+subplot(2, 1, 2);
+plot(receiverErrorSweepPct, minimumMarginBits, 's-', 'LineWidth', 1.3);
+hold on;
+plot(receiverErrorSweepPct, zeros(size(receiverErrorSweepPct)), ...
+    'r--', 'LineWidth', 1);
+hold off;
+grid on;
+xlabel('Receiver baud error (%)');
+ylabel('Minimum sample margin (TX bit times)');
+title('Nonpositive margin means at least one sample crossed a slot boundary');
+fprintf(['Mechanism for sweep 2: each frame re-anchors on its start edge, ' ...
+    'then sample offset grows within that frame as T_rx differs from T_tx. ' ...
+    'The observed threshold is fixture-specific, not a universal UART limit.\n']);
+
+%% Broken case - force a stop bit low and remove the next start edge
+brokenInput = p05_scenario('stop-fault-recovery');
+broken = model(brokenInput.payload_bytes, brokenInput.tx_baud_bps, ...
+    brokenInput.receiver_error_pct, brokenInput.parity_mode, ...
+    brokenInput.stop_bits, brokenInput.inter_frame_gap_bits, ...
+    brokenInput.fault, brokenInput.receive_timeout_us);
+assert(isequal(broken.rx.attempted, [true true false true]), ...
+    'The receiver must attempt the bad frame, miss one edge, then re-arm.');
+assert(isequal(broken.rx.framing_error, [false true false false]), ...
+    'A forced-low stop slot must produce one recognizable framing error.');
+assert(isequal(broken.rx.no_start_edge, [false false true false]), ...
+    'Low stop followed immediately by low start must erase one falling edge.');
+assert(isequal(broken.rx.byte_correct, [true false false true]) && ...
+    broken.metrics.recovery_frame_index == 4, ...
+    'A later high stop and falling edge must prove bounded recovery.');
+rolledBack = model(input.payload_bytes, input.tx_baud_bps, ...
+    input.receiver_error_pct, input.parity_mode, input.stop_bits, ...
+    input.inter_frame_gap_bits, input.fault, input.receive_timeout_us);
+assert(isequaln(rolledBack, baseline), ...
+    'Resetting the line fault must roll back to the exact clean baseline.');
+
+badFrame = broken.config.fault.frame_index;
+badBits = broken.tx.actual_frame_bits(badFrame, :);
+badEdgesUs = (0:broken.config.bits_per_frame) .* ...
+    broken.config.tx_bit_period_us;
+figure('Name', 'P05 broken stop-bit assumption');
+subplot(2, 1, 1);
+stairs(badEdgesUs, [badBits badBits(end)], 'r-', 'LineWidth', 1.4);
+hold on;
+stairs(badEdgesUs, [broken.tx.nominal_frame_bits(badFrame, :) ...
+    broken.tx.nominal_frame_bits(badFrame, end)], ...
+    'k--', 'LineWidth', 1.1);
+hold off;
+grid on;
+xlabel('Time from broken frame start (us)');
+ylabel('Logic level (0 or 1)');
+ylim([-0.2 1.2]);
+legend({'Forced-low stop', 'Nominal frame'}, 'Location', 'eastoutside');
+title('Broken assumption: the stop slot is not high');
+subplot(2, 1, 2);
+bar(1:broken.input.frame_count, [double(broken.rx.byte_correct); ...
+    double(broken.rx.framing_error); double(broken.rx.no_start_edge)]');
+grid on;
+xlabel('Frame index');
+ylabel('Outcome indicator (0 or 1)');
+legend({'Correct', 'Framing error', 'No start edge'}, ...
+    'Location', 'eastoutside');
+title('The next frame is lost; frame four reacquires after a high stop');
+
+fprintf(['Broken-case explanation: frame 2 samples a low stop, frame 3 has ' ...
+    'no high-to-low start transition, and frame 4 recovers after frame 3 ' ...
+    'returns the line high. This idealized logic model is not hardware evidence.\n']);

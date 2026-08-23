@@ -93,12 +93,12 @@
       "phase_title": "Buses and acquisition",
       "slug": "frame-bytes-over-uart",
       "folder": "modules/05-frame-bytes-over-uart",
-      "status": "scaffolded",
+      "status": "implemented",
       "implementation_batch": "P05",
       "prerequisites": [
         "P04"
       ],
-      "evidence_level": "none"
+      "evidence_level": "simulated"
     },
     {
       "number": 6,
