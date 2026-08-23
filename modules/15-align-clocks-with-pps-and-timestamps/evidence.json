@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "batch_id": "P15",
+  "status": "pass",
+  "commands": [
+    {
+      "phase": "preflight",
+      "command": "git status --short --branch && git branch --show-current && git rev-parse HEAD && git log -8 --oneline --decorate && git branch -vv && git worktree list --porcelain",
+      "exit_code": 0,
+      "result": "agent/p15 at 05b2f02; only control-plane P15 activation dirty; local main is a separate stale worktree"
+    },
+    {
+      "phase": "preflight",
+      "command": "find . -path './.git' -prune -o \\( -name CODEOWNERS -o -name OWNERS -o -name OWNERS.md \\) -print && find .git -type f -name '*.lock' -print && command -v matlab || true && command -v octave || true && command -v matlab-batch || true",
+      "exit_code": 0,
+      "result": "no ownership file, repository lock, MATLAB, Octave, or matlab-batch executable found"
+    },
+    {
+      "phase": "preflight",
+      "command": "sha256sum contracts/active-batch.yaml contracts/repo-profile.yaml contracts/profile-requirements.yaml .learning/progress.json",
+      "exit_code": 0,
+      "result": "protected hashes recorded as 311024bc..., 1fa113db..., 9ea06e3a..., and 168524eb..."
+    },
+    {
+      "phase": "pre-change",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "pre-change",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "271 tests ran successfully; 9 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "source-focused",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v tests.test_p15_module.P15IdentityAndArtifactTests.test_guiding_question_p14_connection_p16_boundary_and_claims_are_explicit tests.test_p15_module.P15IdentityAndArtifactTests.test_no_scaffold_placeholder_or_opaque_residue tests.test_p15_module.P15ModelContractTests tests.test_p15_module.P15LearningAndRegressionTests.test_experiment_has_baseline_two_isolated_sweeps_and_broken_case tests.test_p15_module.P15LearningAndRegressionTests.test_interactive_exposes_controls_scenarios_two_views_and_bound_callbacks tests.test_p15_module.P15LearningAndRegressionTests.test_fixed_diagnostics_reset_controls_before_rendering tests.test_p15_module.P15LearningAndRegressionTests.test_executable_checks_cover_complete_failure_and_recovery_contract tests.test_p15_module.P15LearningAndRegressionTests.test_tutor_text_is_mechanism_first_one_prediction_and_teach_back tests.test_p15_module.P15LearningAndRegressionTests.test_claim_language_separates_simulated_runtime_clock_and_physical_evidence tests.test_p15_module.P15LearningAndRegressionTests.test_cli_check_resolves_p15_public_matlab_entry_point",
+      "exit_code": 0,
+      "result": "17 P15 source, independent-oracle, learning, UI, claim, and CLI checks passed"
+    },
+    {
+      "phase": "source-hygiene",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "cd /tmp/p15-final-state.dqEsv7/repo && MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "cd /tmp/p15-final-state.dqEsv7/repo && PYTHONDONTWRITEBYTECODE=1 python3 - <<'PY'\nimport unittest\n\ndef flatten(suite):\n    for item in suite:\n        if isinstance(item, unittest.TestSuite):\n            yield from flatten(item)\n        else:\n            yield item\n\nloaded = unittest.defaultTestLoader.discover('tests')\nselected = unittest.TestSuite(\n    test for test in flatten(loaded)\n    if '.test_matlab_' not in test.id()\n    and '.P15RetainedEvidenceTests.' not in test.id()\n    and not test.id().endswith(\n        'P15IdentityAndArtifactTests.test_complete_artifact_set_has_clean_terminal_newlines_and_bounds'\n    )\n)\nresult = unittest.TextTestRunner(verbosity=1).run(selected)\nprint(\n    f'P15 INTENDED SOURCE-WIDE: run={result.testsRun} '\n    f'failures={len(result.failures)} errors={len(result.errors)} skips={len(result.skipped)}'\n)\nraise SystemExit(not result.wasSuccessful())\nPY",
+      "exit_code": 0,
+      "result": "P15 INTENDED SOURCE-WIDE: run=281 failures=0 errors=0 skips=0"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "cd /tmp/p15-final-state.dqEsv7/repo && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p15_module -v",
+      "exit_code": 0,
+      "result": "23 P15 tests ran successfully; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "cd /tmp/p15-final-state.dqEsv7/repo && MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "294 repository tests ran successfully; 10 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "disposable intended-final-state",
+      "command": "cd /tmp/p15-final-state.dqEsv7/repo && MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "294 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-132205.log"
+    },
+    {
+      "phase": "post-transition",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p15_module -v",
+      "exit_code": 0,
+      "result": "23 P15 tests ran successfully; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "post-transition",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "post-transition",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "294 repository tests ran successfully; 10 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "post-transition",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "294 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-132241.log"
+    },
+    {
+      "phase": "settled post-transition",
+      "command": "python scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "settled post-transition",
+      "command": "./bin/learn status && PYTHONDONTWRITEBYTECODE=1 ./bin/learn check P15",
+      "exit_code": 0,
+      "result": "15 modules implemented; public check routed to run_module_checks('P15')"
+    },
+    {
+      "phase": "settled post-transition",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "294 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-132542.log"
+    },
+    {
+      "phase": "settled post-transition",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "294 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-132547.log"
+    },
+    {
+      "phase": "final audit",
+      "command": "git status --short && git diff --check && git diff --cached --quiet && sha256sum contracts/active-batch.yaml contracts/repo-profile.yaml contracts/profile-requirements.yaml .learning/progress.json",
+      "exit_code": 0,
+      "result": "18 changed paths; 0 unexpected; 0 staged; 4 protected hashes unchanged; clean EOF and resource bounds"
+    },
+    {
+      "phase": "post-audit numerical-boundary repair",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p15_module -v",
+      "exit_code": 0,
+      "result": "24 P15 tests ran successfully, including decimal tick and timeout boundaries; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "post-audit numerical-boundary repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "post-audit numerical-boundary repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "295 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-133244.log"
+    },
+    {
+      "phase": "post-audit numerical-boundary repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "295 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-133249.log"
+    },
+    {
+      "phase": "follow-up numerical-boundary repair",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p15_module -v",
+      "exit_code": 0,
+      "result": "24 P15 tests ran successfully, including sequence-delta gaps and eight/one-ULP positive and negative boundaries; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "follow-up numerical-boundary repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "follow-up numerical-boundary repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "295 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-134150.log"
+    },
+    {
+      "phase": "follow-up numerical-boundary repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "295 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-134155.log"
+    },
+    {
+      "phase": "independent system-risk repair",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_p15_module -v",
+      "exit_code": 0,
+      "result": "25 P15 tests ran successfully, including the tick-index precision boundary and single-interactive public lesson regression; 1 conditional MATLAB test skipped"
+    },
+    {
+      "phase": "independent system-risk repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=contract PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify.py",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules"
+    },
+    {
+      "phase": "independent system-risk repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=quick PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "result": "296 repository tests ran successfully; 10 conditional MATLAB tests skipped"
+    },
+    {
+      "phase": "independent system-risk repair",
+      "command": "MATLAB_LEARNING_VERIFY_PROFILE=full PYTHONDONTWRITEBYTECODE=1 ./scripts/agent-verify.sh",
+      "exit_code": 0,
+      "result": "VERIFY PASS: 24 modules; 296 repository tests ran successfully; 10 conditional MATLAB tests skipped; log verify-20260823-135641.log"
+    }
+  ],
+  "acceptance": [
+    {
+      "criterion": "Preserve the exact P15 guiding question",
+      "status": "pass",
+      "evidence": "Manifest identity and every learner entry point retain the canonical question."
+    },
+    {
+      "criterion": "Follow the mechanism-first learning flow",
+      "status": "pass",
+      "evidence": "One prediction, baseline views, reset levers, changed views, explanations, and teach-back are explicit."
+    },
+    {
+      "criterion": "Provide baseline, labels, two sweeps, and broken case",
+      "status": "pass",
+      "evidence": "Independent Python arithmetic retains exact offset, skew, missing-ID, timeout, and tick-index precision boundaries; source figures name axes and units."
+    },
+    {
+      "criterion": "Separate model and presentation and expose controls",
+      "status": "pass",
+      "evidence": "The pure affine model has no presentation/hardware calls; bound UI controls expose offset, skew, tick, association, and timeout; the public lesson launches exactly one interactive session."
+    },
+    {
+      "criterion": "Connect P14 and P16 without syntax-first teaching",
+      "status": "pass",
+      "evidence": "P14 record identity is the entrance boundary and P16 common-coordinate scheduling is the forward boundary."
+    },
+    {
+      "criterion": "Include invariants, limits, interpretation, and teach-back",
+      "status": "pass",
+      "evidence": "Oracle and executable checks cover equations, quantization, missing identity, timeout, cancellation, malformed input, compatibility, isolation, and resources."
+    },
+    {
+      "criterion": "Advance manifest only after verification",
+      "status": "pass",
+      "evidence": "The real manifest remained unchanged while focused and disposable intended-final-state source-wide gates passed."
+    },
+    {
+      "criterion": "Keep evidence classes distinct",
+      "status": "pass",
+      "evidence": "Source, tutor text, tests, and retained evidence name static/reference claims and every unperformed runtime or physical class."
+    }
+  ],
+  "changed_invariants": [
+    "P15 owns an explicit quantized affine local clock with microsecond and ppm units.",
+    "PPS sequence identity, rather than received array position, determines the synthetic reference epoch.",
+    "A strict inter-PPS gap timeout captures at equality before evaluating lateness.",
+    "Timestamp flooring uses an eight-quotient-ULP affine-operation bound; positive timeout equality uses one gap-scale ULP and zero timeout has no tolerance.",
+    "Absolute timestamp tick indices are limited to 1e12 so the eight-ULP boundary guard cannot become upward rounding over a material fraction of one tick.",
+    "PPS gaps derive from sequence-ID deltas times period instead of subtracting absolute epochs.",
+    "Cancellation retains the pre-timeout PPS prefix, censors later anchors, and never changes raw timestamps.",
+    "The public lesson owns one interactive launch; experiment.m no longer creates a duplicate UI and callback lifetime.",
+    "P15 permanent tests do not freeze the moving implementation frontier."
+  ],
+  "residual_risks": [
+    "No MATLAB runtime or rendered UI execution was available.",
+    "An ideal affine clock and deterministic floor quantization do not model oscillator wander, capture latency, leap seconds, receiver faults, or timestamp provenance.",
+    "Within the 1e12 tick-index ceiling, eight-ULP tick and one-ULP positive-timeout boundary policies are floating-point representation guards, not evidence for a fixed-point hardware timestamp counter.",
+    "Educational effectiveness requires a learner session and teach-back."
+  ],
+  "unperformed_validation": [
+    "MATLAB/Octave runtime, numerical source execution, figure rendering, and UI interaction",
+    "physical PPS/GNSS receiver, oscillator, interrupt capture, timestamp peripheral, PTP/NTP, bench, HIL, field, RT1/RT2, or Unreal validation",
+    "signing, release, deployment, staging, or production validation",
+    "remote Portfolio Control validation and target Quality workflow",
+    "learner playtest and teach-back"
+  ]
+}
